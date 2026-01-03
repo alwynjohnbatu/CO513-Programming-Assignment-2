@@ -1,67 +1,90 @@
-# PA 2: ARM Assembly Up/Down Counter (DE1-SoC)
+<h1 align="center">PA 2: ARM Assembly Up/Down Counter (DE1-SoC)</h1>
 
+<p align="justify">
 This repository contains the solution for Programming Assignment 2 (PA2), implementing a 2-digit decimal counter (00-59) on the DE1-SoC board using ARMv7 assembly. The project features a fully debounced Start/Stop toggle, a synchronous Reset, and Direction control.
+</p>
 
-## Project Overview
+<h2 align="center">Project Overview</h2>
 
-* **Platform:** DE1-SoC (Cyclone V SoC) / CPUlator Simulator
-* **Language:** ARMv7 Assembly
-* **Features:**
-    * 2-Digit 7-Segment Display (00-59)
-    * Debounced Start/Stop Toggle (KEY0)
-    * Asynchronous Reset (KEY1)
-    * Direction Control (SW0)
+<ul>
+    <li><strong>Platform:</strong> DE1-SoC (Cyclone V SoC) / CPUlator Simulator</li>
+    <li><strong>Language:</strong> ARMv7 Assembly</li>
+    <li><strong>Features:</strong>
+        <ul>
+            <li>2-Digit 7-Segment Display (00-59)</li>
+            <li>Debounced Start/Stop Toggle (KEY0)</li>
+            <li>Asynchronous Reset (KEY1)</li>
+            <li>Direction Control (SW0)</li>
+        </ul>
+    </li>
+</ul>
 
----
+<hr>
 
-## Part 1: Debouncing Research & Concepts
+<h2 align="center">Part 1: Debouncing Research & Concepts</h2>
 
-### 1. What is Mechanical Switch Bounce?
+<h3>1. What is Mechanical Switch Bounce?</h3>
+<p align="justify">
 Mechanical switch bounce is a phenomenon where the metal contacts inside a pushbutton do not close instantly. Due to the elasticity of the materials, the contacts physically "bounce" apart and reconnect several times over a few milliseconds before settling. To a high-speed processor, this looks like a rapid series of On-Off signals (10–20 clicks) rather than a single press.
+</p>
 
-### 2. Active-Low Logic on DE1-SoC
-"Active-Low" means that the device is considered "Active" (ON) when the signal is **0** (Low Voltage) and "Inactive" (OFF) when the signal is **1** (High Voltage). On the DE1-SoC, keys are pulled up to 3.3V by default. Pressing a key connects the circuit to the ground (0V), registering a Logic 0.
+<h3>2. Active-Low Logic on DE1-SoC</h3>
+<p align="justify">
+"Active-Low" means that the device is considered "Active" (ON) when the signal is <strong>0</strong> (Low Voltage) and "Inactive" (OFF) when the signal is <strong>1</strong> (High Voltage). On the DE1-SoC, keys are pulled up to 3.3V by default. Pressing a key connects the circuit to the ground (0V), registering a Logic 0.
+</p>
 
-### 3. Software Debouncing Methods
+<h3>3. Software Debouncing Methods</h3>
+<p align="justify">
 To ensure stable operation, software must filter out these false signals. Common methods include:
-* **Time Delays:** Pausing execution for 10–20ms after detecting a change to let the signal settle.
-* **Confirm-after-Delay:** Checking the input, waiting, and checking again to confirm the state is stable.
-* **Wait-for-Release (Blocking):** Pausing the program entirely until the user releases the button.
-* **Edge Detection (Non-Blocking):** Comparing the current state to the previous state to trigger an action only on the specific transition (e.g., 0 to 1), allowing the program to continue running in the background.
+</p>
+<ul>
+    <li><strong>Time Delays:</strong> Pausing execution for 10–20ms after detecting a change to let the signal settle.</li>
+    <li><strong>Confirm-after-Delay:</strong> Checking the input, waiting, and checking again to confirm the state is stable.</li>
+    <li><strong>Wait-for-Release (Blocking):</strong> Pausing the program entirely until the user releases the button.</li>
+    <li><strong>Edge Detection (Non-Blocking):</strong> Comparing the current state to the previous state to trigger an action only on the specific transition (e.g., 0 to 1), allowing the program to continue running in the background.</li>
+</ul>
 
----
+<hr>
 
-## Part 2: Implementation Summary
+<h2 align="center">Part 2: Implementation Summary</h2>
 
-### Why Debouncing is Essential
+<h3>Why Debouncing is Essential</h3>
+<p align="justify">
 In embedded systems, debouncing is critical because processors run significantly faster than physical mechanical switches. Without debouncing, a single button press is interpreted as multiple inputs, causing counters to skip numbers or control states (e.g., Start/Stop) to flip rapidly.
+</p>
 
-### Method Implemented: State-Based Edge Detection
-For this project, I implemented **Non-Blocking State-Based Edge Detection** rather than a simple delay loop.
+<h3>Method Implemented: State-Based Edge Detection</h3>
+<p align="justify">
+For this project, I implemented <strong>Non-Blocking State-Based Edge Detection</strong> rather than a simple delay loop.
+</p>
 
-* **Mechanism:** The program utilizes a specific register (`R7`) to store the "Last State" of the KEY0 input.
-* **Logic:** On every loop cycle, the code compares the *Current State* against the *Last State*.
-* **Trigger:** The toggle action executes **only** when the state transitions from **0 (Unpressed)** to **1 (Pressed)**.
-* **Reasoning:** This approach is non-blocking, meaning the processor can effectively debounce the switch while simultaneously updating the timer and checking other inputs (Reset/Direction). This ensures the stopwatch maintains accurate timing even if the button is held down.
+<ul>
+    <li><strong>Mechanism:</strong> The program utilizes a specific register (<code>R7</code>) to store the "Last State" of the KEY0 input.</li>
+    <li><strong>Logic:</strong> On every loop cycle, the code compares the <em>Current State</em> against the <em>Last State</em>.</li>
+    <li><strong>Trigger:</strong> The toggle action executes <strong>only</strong> when the state transitions from <strong>0 (Unpressed)</strong> to <strong>1 (Pressed)</strong>.</li>
+    <li><strong>Reasoning:</strong> This approach is non-blocking, meaning the processor can effectively debounce the switch while simultaneously updating the timer and checking other inputs (Reset/Direction). This ensures the stopwatch maintains accurate timing even if the button is held down.</li>
+</ul>
 
----
+<hr>
 
-## Part 3: Video Demonstration & Explanations
+<h2 align="center">Part 3: Video Demonstration & Explanations</h2>
 
-**Research Questions:**
-https://youtu.be/2q7wghQKbKk
+<p><strong>Research Questions:</strong><br>
+https://youtu.be/2q7wghQKbKk</p>
 
-**Demonstration (Simulation):**
-https://youtu.be/luXIReXM1TE
+<p><strong>Demonstration (Simulation):</strong><br>
+https://youtu.be/luXIReXM1TE</p>
 
-**Code Explanation (Part 1):**
-https://youtu.be/BhmEFMUTBi0
+<p><strong>Code Explanation (Part 1):</strong><br>
+https://youtu.be/BhmEFMUTBi0</p>
 
-**Code Explanation (Part 2):**
-https://youtu.be/eRAhS7D3K20
+<p><strong>Code Explanation (Part 2):</strong><br>
+https://youtu.be/eRAhS7D3K20</p>
 
----
+<hr>
 
-## Note on Requirement 5 (Display Encoding)
-*Per the assignment instructions regarding Active-Low encoding:*
-The DE1-SoC hardware requires Active-Low inputs for LEDs (0 = ON). However, the CPUlator simulator used for verification treats LEDs as Active-High (1 = ON). To ensure correct visualization in the simulator, this program uses Active-High bit patterns (e.g., `0x3F` for '0') and writes them directly to the display address.
+<h2 align="center">Note on Requirement 5 (Display Encoding)</h2>
+<p align="justify">
+<em>Per the assignment instructions regarding Active-Low encoding:</em><br>
+The DE1-SoC hardware requires Active-Low inputs for LEDs (0 = ON). However, the CPUlator simulator used for verification treats LEDs as Active-High (1 = ON). To ensure correct visualization in the simulator, this program uses Active-High bit patterns (e.g., <code>0x3F</code> for '0') and writes them directly to the display address.
+</p>
