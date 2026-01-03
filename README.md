@@ -82,9 +82,3 @@ https://youtu.be/BhmEFMUTBi0</p>
 https://youtu.be/eRAhS7D3K20</p>
 
 <hr>
-
-<h2 align="center">Note on Requirement 5 (Display Encoding)</h2>
-<p align="justify">
-<em>Per the assignment instructions regarding Active-Low encoding:</em><br>
-The DE1-SoC hardware requires Active-Low inputs for LEDs (0 = ON). However, the CPUlator simulator used for verification treats LEDs as Active-High (1 = ON). To ensure correct visualization in the simulator, this program uses Active-High bit patterns (e.g., <code>0x3F</code> for '0') and writes them directly to the display address.
-</p>
