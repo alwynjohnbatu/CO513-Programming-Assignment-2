@@ -1,4 +1,4 @@
-# PA2: ARM Assembly Up/Down Counter (DE1-SoC)
+# PA 2: ARM Assembly Up/Down Counter (DE1-SoC)
 
 This repository contains the solution for Programming Assignment 2 (PA2), implementing a 2-digit decimal counter (00-59) on the DE1-SoC board using ARMv7 assembly. The project features a fully debounced Start/Stop toggle, a synchronous Reset, and Direction control.
 
